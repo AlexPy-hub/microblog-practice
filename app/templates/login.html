@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}
+Вход — Microblog
+{% endblock %}
+
+{% block content %}
+
+<section class="auth-page">
+
+    <div class="auth-card">
+
+        <div class="auth-header">
+
+            <span class="badge">
+                Microblog
+            </span>
+
+            <h1>
+                Вход в аккаунт
+            </h1>
+
+            <p>
+                Введите данные своего аккаунта.
+            </p>
+
+        </div>
+
+        <form method="POST" class="auth-form">
+
+            <label for="login">
+                Имя пользователя или Email
+            </label>
+
+            <input
+                id="login"
+                name="login"
+                type="text"
+                placeholder="Введите username или email"
+                required
+            >
+
+            <label for="password">
+                Пароль
+            </label>
+
+            <input
+                id="password"
+                name="password"
+                type="password"
+                placeholder="Введите пароль"
+                required
+            >
+
+            <button
+                type="submit"
+                class="button primary auth-button"
+            >
+                Войти
+            </button>
+
+        </form>
+
+        <p class="auth-footer">
+            Нет аккаунта?
+            <a href="{{ url_for('auth.register') }}">
+                Зарегистрироваться
+            </a>
+        </p>
+
+    </div>
+
+</section>
+
+{% endblock %}

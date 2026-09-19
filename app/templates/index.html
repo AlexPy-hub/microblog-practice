@@ -1,0 +1,266 @@
+{% extends "base.html" %}
+
+{% block title %}
+Главная — Microblog
+{% endblock %}
+
+{% block content %}
+
+<section class="hero">
+
+    <div class="hero-content">
+
+        <span class="badge">
+            Python · Flask · SQLite
+        </span>
+
+        <h1>
+            Добро пожаловать в
+            <span>Microblog</span>
+        </h1>
+
+        <p>
+            Небольшая социальная платформа,
+            где пользователи могут создавать
+            и публиковать свои записи.
+        </p>
+
+        <div class="hero-actions">
+
+            <a
+                href="{{ url_for('auth.register') }}"
+                class="button primary"
+            >
+                Начать пользоваться
+            </a>
+
+            <a
+                href="#about"
+                class="button secondary"
+            >
+                Узнать больше
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<section id="about" class="features">
+
+    <div class="feature-card">
+
+        <div class="feature-icon">
+            👤
+        </div>
+
+        <h2>
+            Пользователи
+        </h2>
+
+        <p>
+            Регистрация, авторизация
+            и пользовательские профили.
+        </p>
+
+    </div>
+
+
+    <div class="feature-card">
+
+        <div class="feature-icon">
+            ✍️
+        </div>
+
+        <h2>
+            Публикации
+        </h2>
+
+        <p>
+            Создание, просмотр,
+            редактирование и удаление постов.
+        </p>
+
+    </div>
+
+
+    <div class="feature-card">
+
+        <div class="feature-icon">
+            🗄️
+        </div>
+
+        <h2>
+            База данных
+        </h2>
+
+        <p>
+            Данные пользователей и публикаций
+            будут храниться в SQLite.
+        </p>
+
+    </div>
+
+</section>
+
+
+<section class="posts-section">
+
+    <div class="section-header">
+
+        <div>
+
+            <span class="badge">
+                Публикации
+            </span>
+
+            <h2>
+                Последние записи
+            </h2>
+
+        </div>
+
+
+        {% if session.get("user_id") %}
+
+            <a
+                href="{{ url_for('main.create_post') }}"
+                class="button primary"
+            >
+                + Создать пост
+            </a>
+
+        {% endif %}
+
+    </div>
+
+
+    {% if posts %}
+
+        <div class="posts-list">
+
+            {% for post in posts %}
+
+                <article class="post-card">
+
+                    <div class="post-header">
+
+                        <div>
+
+                            <h3>
+                                {{ post.title }}
+                            </h3>
+
+                            <div class="post-author-info">
+
+    {% if post.author.avatar %}
+
+        <img
+            src="{{ url_for(
+                'static',
+                filename='uploads/avatars/' ~ post.author.avatar
+            ) }}"
+            alt="Аватар {{ post.author.username }}"
+            class="post-avatar"
+        >
+
+    {% else %}
+
+        <div class="post-avatar post-avatar-placeholder">
+            {{ post.author.username[0]|upper }}
+        </div>
+
+    {% endif %}
+
+
+    <span class="post-author">
+
+        Автор:
+
+        <a
+            href="{{ url_for(
+                'main.profile',
+                username=post.author.username
+            ) }}"
+        >
+            {{ post.author.username }}
+        </a>
+
+    </span>
+
+</div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="post-content">
+                        {{ post.content }}
+                    </div>
+
+
+                    <div class="post-date">
+                        {{ post.created_at.strftime("%d.%m.%Y %H:%M") }}
+                    </div>
+
+
+                    {% if session.get("user_id") == post.user_id %}
+
+                        <div class="post-actions">
+
+                            <a
+                                href="{{ url_for('main.edit_post', post_id=post.id) }}"
+                                class="button secondary"
+                            >
+                                ✏️ Редактировать
+                            </a>
+
+
+                            <form
+                                method="POST"
+                                action="{{ url_for('main.delete_post', post_id=post.id) }}"
+                                onsubmit="return confirm('Удалить эту публикацию?');"
+                            >
+
+                                <button
+                                    type="submit"
+                                    class="button danger"
+                                >
+                                    🗑️ Удалить
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    {% endif %}
+
+                </article>
+
+            {% endfor %}
+
+        </div>
+
+
+    {% else %}
+
+        <div class="empty-posts">
+
+            <h3>
+                Пока нет публикаций
+            </h3>
+
+            <p>
+                Создайте первую публикацию.
+            </p>
+
+        </div>
+
+    {% endif %}
+
+</section>
+
+{% endblock %}

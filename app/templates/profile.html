@@ -1,0 +1,206 @@
+{% extends "base.html" %}
+
+{% block title %}
+Профиль {{ user.username }} — Microblog
+{% endblock %}
+
+{% block content %}
+
+<section class="profile-page">
+
+    <div class="profile-card">
+
+        {% if user.avatar %}
+
+            <img
+                src="{{ url_for(
+                    'static',
+                    filename='uploads/avatars/' ~ user.avatar
+                ) }}"
+                alt="Аватар {{ user.username }}"
+                class="profile-avatar"
+            >
+
+        {% else %}
+
+            <div class="profile-avatar">
+                {{ user.username[0]|upper }}
+            </div>
+
+        {% endif %}
+
+
+        <div class="profile-info">
+
+            <span class="badge">
+                Профиль пользователя
+            </span>
+
+            <h1>
+                {{ user.username }}
+            </h1>
+
+            <p class="profile-email">
+                {{ user.email }}
+            </p>
+
+            <p class="profile-date">
+                Регистрация:
+                {{ user.created_at.strftime("%d.%m.%Y") }}
+            </p>
+
+
+            {% if session.get("user_id") == user.id %}
+
+                <a
+                    href="{{ url_for('main.edit_profile') }}"
+                    class="button secondary profile-edit-button"
+                >
+                    ✏️ Изменить аватар
+                </a>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+
+    <div class="profile-statistics">
+
+        <div class="stat-card">
+
+            <span class="stat-number">
+                {{ posts|length }}
+            </span>
+
+            <span class="stat-label">
+                Публикаций
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <section class="posts-section">
+
+        <div class="section-header">
+
+            <div>
+
+                <span class="badge">
+                    Публикации
+                </span>
+
+                <h2>
+                    Записи пользователя
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        {% if posts %}
+
+            <div class="posts-list">
+
+                {% for post in posts %}
+
+                    <article class="post-card">
+
+                        <div class="post-header">
+
+                            <div>
+
+                                <h3>
+                                    {{ post.title }}
+                                </h3>
+
+                                <span class="post-author">
+                                    Автор: {{ post.author.username }}
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="post-content">
+                            {{ post.content }}
+                        </div>
+
+
+                        <div class="post-date">
+                            {{ post.created_at.strftime("%d.%m.%Y %H:%M") }}
+                        </div>
+
+
+                        {% if session.get("user_id") == post.user_id %}
+
+                            <div class="post-actions">
+
+                                <a
+                                    href="{{ url_for(
+                                        'main.edit_post',
+                                        post_id=post.id
+                                    ) }}"
+                                    class="button secondary"
+                                >
+                                    ✏️ Редактировать
+                                </a>
+
+
+                                <form
+                                    method="POST"
+                                    action="{{ url_for(
+                                        'main.delete_post',
+                                        post_id=post.id
+                                    ) }}"
+                                    onsubmit="return confirm(
+                                        'Удалить эту публикацию?'
+                                    );"
+                                >
+
+                                    <button
+                                        type="submit"
+                                        class="button danger"
+                                    >
+                                        🗑️ Удалить
+                                    </button>
+
+                                </form>
+
+                            </div>
+
+                        {% endif %}
+
+                    </article>
+
+                {% endfor %}
+
+            </div>
+
+
+        {% else %}
+
+            <div class="empty-posts">
+
+                <h3>
+                    Пока нет публикаций
+                </h3>
+
+                <p>
+                    Этот пользователь ещё ничего не опубликовал.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </section>
+
+</section>
+
+{% endblock %}

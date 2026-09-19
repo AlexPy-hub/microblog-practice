@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}
+Изменение профиля — Microblog
+{% endblock %}
+
+{% block content %}
+
+<section class="auth-page">
+
+    <div class="auth-card">
+
+        <div class="auth-header">
+
+            <span class="badge">
+                Microblog
+            </span>
+
+            <h1>
+                Изменение профиля
+            </h1>
+
+            <p>
+                Выберите изображение для своей аватарки.
+            </p>
+
+        </div>
+
+
+        <form
+            method="POST"
+            enctype="multipart/form-data"
+            class="auth-form"
+        >
+
+            <label for="avatar">
+                Аватарка
+            </label>
+
+            <input
+                id="avatar"
+                name="avatar"
+                type="file"
+                accept=".png,.jpg,.jpeg,.gif,.webp"
+                required
+            >
+
+            <button
+                type="submit"
+                class="button primary auth-button"
+            >
+                Сохранить аватарку
+            </button>
+
+        </form>
+
+
+        <p class="auth-footer">
+
+            <a
+                href="{{ url_for(
+                    'main.profile',
+                    username=user.username
+                ) }}"
+            >
+                ← Вернуться в профиль
+            </a>
+
+        </p>
+
+    </div>
+
+</section>
+
+{% endblock %}

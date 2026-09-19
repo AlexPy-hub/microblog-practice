@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        {% block title %}Microblog{% endblock %}
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+
+</head>
+
+
+<body>
+
+<header class="navbar">
+
+    <div class="container navbar-content">
+
+        <a
+            href="{{ url_for('index') }}"
+            class="logo"
+        >
+            Microblog
+        </a>
+
+
+        <nav class="navigation">
+
+            <a href="{{ url_for('index') }}">
+                Главная
+            </a>
+
+
+            {% if session.get("user_id") %}
+
+                <a
+    href="{{ url_for(
+        'main.profile',
+        username=session.get('username')
+    ) }}"
+    class="nav-profile"
+>
+    {% if current_user and current_user.avatar %}
+        <img
+            src="{{ url_for(
+                'static',
+                filename='uploads/avatars/' ~ current_user.avatar
+            ) }}"
+            alt="Аватар"
+            class="nav-avatar"
+        >
+    {% else %}
+        <span class="nav-avatar nav-avatar-placeholder">
+            {{ session.get("username")[0]|upper }}
+        </span>
+    {% endif %}
+
+    <span>{{ session.get("username") }}</span>
+</a>
+
+
+                <a href="{{ url_for('auth.logout') }}">
+                    Выйти
+                </a>
+
+
+            {% else %}
+
+                <a href="{{ url_for('auth.login') }}">
+                    Войти
+                </a>
+
+
+                <a href="{{ url_for('auth.register') }}">
+                    Регистрация
+                </a>
+
+            {% endif %}
+
+        </nav>
+
+    </div>
+
+</header>
+
+
+{% with messages = get_flashed_messages() %}
+
+    {% if messages %}
+
+        <div class="container messages">
+
+            {% for message in messages %}
+
+                <div class="message">
+                    {{ message }}
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% endif %}
+
+{% endwith %}
+
+
+<main class="container">
+
+    {% block content %}{% endblock %}
+
+</main>
+
+
+<footer class="footer">
+
+    <div class="container">
+
+        <p>
+            Microblog Practice Project
+        </p>
+
+    </div>
+
+</footer>
+
+
+</body>
+
+</html>

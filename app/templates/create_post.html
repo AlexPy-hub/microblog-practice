@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}
+Создание публикации — Microblog
+{% endblock %}
+
+{% block content %}
+
+<section class="auth-page">
+
+    <div class="auth-card">
+
+        <div class="auth-header">
+
+            <span class="badge">
+                Microblog
+            </span>
+
+            <h1>
+                Новая публикация
+            </h1>
+
+            <p>
+                Поделитесь своей мыслью с другими пользователями.
+            </p>
+
+        </div>
+
+        <form method="POST" class="auth-form">
+
+            <label for="title">
+                Заголовок
+            </label>
+
+            <input
+                id="title"
+                name="title"
+                type="text"
+                placeholder="Введите заголовок"
+                maxlength="200"
+                required
+            >
+
+            <label for="content">
+                Текст публикации
+            </label>
+
+            <textarea
+                id="content"
+                name="content"
+                placeholder="Напишите что-нибудь..."
+                rows="8"
+                required
+            ></textarea>
+
+            <button
+                type="submit"
+                class="button primary auth-button"
+            >
+                Опубликовать
+            </button>
+
+        </form>
+
+        <p class="auth-footer">
+            <a href="{{ url_for('index') }}">
+                ← Вернуться на главную
+            </a>
+        </p>
+
+    </div>
+
+</section>
+
+{% endblock %}

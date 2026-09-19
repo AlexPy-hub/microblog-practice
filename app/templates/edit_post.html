@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}
+Редактирование публикации — Microblog
+{% endblock %}
+
+{% block content %}
+
+<section class="auth-page">
+
+    <div class="auth-card">
+
+        <div class="auth-header">
+
+            <span class="badge">
+                Microblog
+            </span>
+
+            <h1>
+                Редактирование публикации
+            </h1>
+
+            <p>
+                Измените заголовок или текст публикации.
+            </p>
+
+        </div>
+
+        <form method="POST" class="auth-form">
+
+            <label for="title">
+                Заголовок
+            </label>
+
+            <input
+                id="title"
+                name="title"
+                type="text"
+                value="{{ post.title }}"
+                maxlength="200"
+                required
+            >
+
+            <label for="content">
+                Текст публикации
+            </label>
+
+            <textarea
+                id="content"
+                name="content"
+                rows="8"
+                required
+            >{{ post.content }}</textarea>
+
+            <button
+                type="submit"
+                class="button primary auth-button"
+            >
+                Сохранить изменения
+            </button>
+
+        </form>
+
+        <p class="auth-footer">
+            <a href="{{ url_for('index') }}">
+                ← Вернуться на главную
+            </a>
+        </p>
+
+    </div>
+
+</section>
+
+{% endblock %}

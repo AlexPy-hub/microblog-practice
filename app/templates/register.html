@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block title %}
+Регистрация — Microblog
+{% endblock %}
+
+{% block content %}
+
+<section class="auth-page">
+
+    <div class="auth-card">
+
+        <div class="auth-header">
+
+            <span class="badge">
+                Microblog
+            </span>
+
+            <h1>
+                Создание аккаунта
+            </h1>
+
+            <p>
+                Зарегистрируйтесь, чтобы создавать
+                собственные публикации.
+            </p>
+
+        </div>
+
+
+        <form method="POST" class="auth-form">
+
+            <label for="username">
+                Имя пользователя
+            </label>
+
+            <input
+                id="username"
+                name="username"
+                type="text"
+                placeholder="Введите имя пользователя"
+                required
+            >
+
+
+            <label for="email">
+                Email
+            </label>
+
+            <input
+                id="email"
+                name="email"
+                type="email"
+                placeholder="Введите email"
+                required
+            >
+
+
+            <label for="password">
+                Пароль
+            </label>
+
+            <input
+                id="password"
+                name="password"
+                type="password"
+                placeholder="Введите пароль"
+                required
+            >
+
+
+            <button
+                type="submit"
+                class="button primary auth-button"
+            >
+                Зарегистрироваться
+            </button>
+
+        </form>
+
+
+        <p class="auth-footer">
+            Уже есть аккаунт?
+            <a href="#">Войти</a>
+        </p>
+
+    </div>
+
+</section>
+
+{% endblock %}
