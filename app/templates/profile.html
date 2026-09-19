@@ -59,6 +59,23 @@
                     ✏️ Изменить аватар
                 </a>
 
+            {% else %}
+
+                <a
+                    href="{{ url_for(
+                        'main.messages',
+                        username=user.username
+                    ) }}"
+                    class="button primary profile-message-button"
+                >
+                    💬 Написать сообщение
+                </a>
+<a
+    href="{{ url_for('main.messages_list') }}"
+    class="button secondary profile-message-button"
+>
+    💬 Личные сообщения
+</a>
             {% endif %}
 
         </div>
@@ -76,6 +93,19 @@
 
             <span class="stat-label">
                 Публикаций
+            </span>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <span class="stat-number">
+                {{ user.comments|length }}
+            </span>
+
+            <span class="stat-label">
+                Комментариев
             </span>
 
         </div>

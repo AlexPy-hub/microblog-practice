@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Личные сообщения</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+</head>
+
+<body>
+
+<div class="messages-page">
+
+    <div class="messages-container messages-list-page">
+
+        <div class="messages-header">
+
+            <a
+                href="{{ url_for('index') }}"
+                class="messages-back"
+            >
+                ←
+            </a>
+
+            <div class="messages-user">
+
+                <div>
+
+                    <div class="messages-username">
+                        Личные сообщения
+                    </div>
+
+                    <div class="messages-status">
+                        Ваши диалоги
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div
+            class="conversations-list"
+            id="conversations-list"
+        >
+
+            {% if conversations %}
+
+                {% for conversation in conversations %}
+
+                    <a
+                        href="{{ url_for(
+                            'main.messages',
+                            username=conversation.user.username
+                        ) }}"
+                        class="conversation-item"
+                    >
+
+                        <div class="conversation-avatar">
+
+                            {% if conversation.user.avatar %}
+
+                                <img
+                                    src="{{ url_for(
+                                        'static',
+                                        filename='uploads/avatars/' + conversation.user.avatar
+                                    ) }}"
+                                    alt="{{ conversation.user.username }}"
+                                >
+
+                            {% else %}
+
+                                {{ conversation.user.username[0]|upper }}
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <div class="conversation-content">
+
+                            <div class="conversation-top">
+
+                                <span class="conversation-username">
+                                    {{ conversation.user.username }}
+                                </span>
+
+                                <span class="conversation-time">
+                                    {{ conversation.last_message.created_at.strftime("%H:%M") }}
+                                </span>
+
+                            </div>
+
+
+                            <div class="conversation-bottom">
+
+                                <span class="conversation-preview">
+
+                                    {% if conversation.last_message.sender_id == session.get("user_id") %}
+                                        Вы:
+                                    {% endif %}
+
+                                    {{ conversation.last_message.content }}
+
+                                </span>
+
+
+                                {% if conversation.unread_count > 0 %}
+
+                                    <span class="conversation-unread">
+                                        {{ conversation.unread_count }}
+                                    </span>
+
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+                    </a>
+
+                {% endfor %}
+
+            {% else %}
+
+                <div class="messages-empty">
+
+                    <div class="messages-empty-icon">
+                        💬
+                    </div>
+
+                    <div class="messages-empty-title">
+                        Пока нет диалогов
+                    </div>
+
+                    <div class="messages-empty-text">
+                        Здесь появятся ваши личные сообщения
+                    </div>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    console.log("MESSAGES LIST JS ЗАПУЩЕН");
+
+
+    const conversationsList =
+        document.getElementById(
+            "conversations-list"
+        );
+
+
+    if (!conversationsList) {
+
+        console.error(
+            "Не найден список диалогов."
+        );
+
+        return;
+    }
+
+
+    let updating = false;
+
+
+    async function updateConversations() {
+
+        if (updating) {
+            return;
+        }
+
+
+        updating = true;
+
+
+        try {
+
+            const response =
+                await fetch(
+                    window.location.href,
+                    {
+                        method: "GET",
+
+                        headers: {
+                            "X-Requested-With":
+                                "XMLHttpRequest"
+                        },
+
+                        cache: "no-store"
+                    }
+                );
+
+
+            if (!response.ok) {
+
+                console.error(
+                    "Ошибка обновления списка диалогов:",
+                    response.status
+                );
+
+                return;
+            }
+
+
+            const html =
+                await response.text();
+
+
+            const parser =
+                new DOMParser();
+
+
+            const documentFromServer =
+                parser.parseFromString(
+                    html,
+                    "text/html"
+                );
+
+
+            const newConversationsList =
+                documentFromServer.getElementById(
+                    "conversations-list"
+                );
+
+
+            if (!newConversationsList) {
+
+                console.error(
+                    "Сервер не вернул список диалогов."
+                );
+
+                return;
+            }
+
+
+            conversationsList.innerHTML =
+                newConversationsList.innerHTML;
+
+
+            console.log(
+                "Список диалогов обновлён."
+            );
+
+
+        } catch (error) {
+
+            console.error(
+                "Ошибка обновления диалогов:",
+                error
+            );
+
+
+        } finally {
+
+            updating = false;
+        }
+    }
+
+
+    /*
+     * Проверяем новые сообщения
+     * каждые 2 секунды.
+     */
+
+    setInterval(
+        updateConversations,
+        2000
+    );
+
+});
+
+</script>
+
+
+</body>
+
+</html>
